@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - dev
+    tags:
+      - '*'
 name: "Test, Build & Release Android"
 
 jobs:
@@ -23,4 +25,3 @@ jobs:
         with:
           artifacts: "hello"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.event.head_commit.id }}
