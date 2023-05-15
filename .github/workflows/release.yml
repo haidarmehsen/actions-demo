@@ -2,7 +2,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dev
+      - main
 name: "Test, Build & Release Android"
 
 jobs:
