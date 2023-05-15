@@ -1,0 +1,25 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+name: "Test, Build & Release Android"
+
+jobs:
+  build:
+    permissions: write-all
+    name: Build & Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release
+          path: |
+            hello
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "hello"
+          token: ${{ secrets.GITHUB_TOKEN }}
