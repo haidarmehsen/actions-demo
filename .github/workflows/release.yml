@@ -19,6 +19,7 @@ jobs:
           path: |
             hello
       - run: cat hello
+      - run: echo ${{github.run_number}}
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
