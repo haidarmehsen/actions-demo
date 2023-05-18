@@ -25,6 +25,7 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: yq -r '.version' 'pubspec.yaml'
+      - run: echo ${{ steps.yq.outputs.stdout }}
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
