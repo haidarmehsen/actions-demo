@@ -20,6 +20,7 @@ jobs:
             hello
       - run: cat hello
       - run: echo ${{github.run_number}}
+      - run: cat pubspec.yaml
       # Get version from pubspec.yaml version is of form: version: 100.9.0+101
       - name: Get version
         id: get_version
