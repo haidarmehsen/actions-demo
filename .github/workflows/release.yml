@@ -25,5 +25,5 @@ jobs:
         with:
           artifacts: "hello"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v1.0.0
+          tag: v1.0.0+${{github.run_number}}
           allowUpdates: true
