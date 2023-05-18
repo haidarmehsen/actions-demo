@@ -20,10 +20,16 @@ jobs:
             hello
       - run: cat hello
       - run: echo ${{github.run_number}}
+      - name: Get version
+        id: yq
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -r '.version' 'pubspec.yaml'
+
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
           artifacts: "hello"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v1.0.0+${{github.run_number}}
+          tag: v${{ steps.yq.outputs.stdout }}
           allowUpdates: true

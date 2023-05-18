@@ -1,0 +1,161 @@
+name: stories
+description: Stories mobile app.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 100.9.0+101
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+
+  # for localization
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
+
+  # for state management
+  hydrated_bloc: ^9.1.0
+  bloc: ^8.1.1
+  flutter_bloc: ^8.1.2
+
+  # for dependency injection
+  get_it: ^7.2.0
+  injectable: ^2.1.1
+
+  # for logging
+  logger: ^1.3.0
+
+  # for working with paths
+  path_provider: ^2.0.14
+
+  # for routing
+  go_router: ^7.0.1
+
+  # for rendering svg assets
+  flutter_svg: ^2.0.5
+  vector_graphics: ^1.1.5
+
+  # for working with phone text fields
+  intl_phone_field:
+    git:
+      url: "https://github.com/Haidar0096/intl_phone_field"
+
+  # for mapping figma design to flutter
+  flutter_screenutil: ^5.7.0
+
+  # for sliding carousel
+  carousel_slider: ^4.2.1
+
+  # for tabbed view page indicator
+  smooth_page_indicator: ^1.1.0
+
+  # for working with freezed package
+  freezed_annotation: ^2.2.0
+
+  # for useful methods on collections
+  collection: ^1.17.0
+
+  # for working with maps
+  google_maps_flutter: ^2.2.6
+
+  # for permission handling
+  permission_handler: ^10.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+  # generator for injectable package
+  injectable_generator: ^2.1.5
+
+  # for code generation
+  build_runner: ^2.3.3
+
+  # for less boilerplate when working with data models
+  freezed: ^2.3.2
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    # Images
+    - assets/images/
+    - assets/temp_images/
+
+  fonts:
+    - family: "DINAlternateBold"
+      fonts:
+        - asset: assets/fonts/DIN-Alternate-Bold.otf
+
+    - family: "Santana"
+      fonts:
+        - asset: assets/fonts/Santana.ttf
+
+    - family: "SantanaBlack"
+      fonts:
+        - asset: assets/fonts/Santana-Black.ttf
+
+    - family: "SantanaBlackCondensed"
+      fonts:
+        - asset: assets/fonts/Santana-Black-Condensed.ttf
+
+    - family: "SantanaBold"
+      fonts:
+        - asset: assets/fonts/Santana-Bold.ttf
+
+    - family: "SantanaRegularCondensed"
+      fonts:
+        - asset: assets/fonts/Santana-Regular-Condensed.ttf
+
+    - family: "SantanaXtraCondensed"
+      fonts:
+        - asset: assets/fonts/Santana-Xtra-Condensed.ttf
+
+    - family: "MontserratRegular"
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+
+    - family: "MontserratBlack"
+      fonts:
+        - asset: assets/fonts/Montserrat-Black.ttf
+
+    - family: "MontserratBlackItalic"
+      fonts:
+        - asset: assets/fonts/Montserrat-BlackItalic.ttf
+
+    - family: "MontserratBold"
+      fonts:
+        - asset: assets/fonts/Montserrat-Bold.ttf
+
+    - family: "MontserratExtraBold"
+      fonts:
+        - asset: assets/fonts/Montserrat-ExtraBold.ttf
+
+    - family: "MontserratExtraLight"
+      fonts:
+        - asset: assets/fonts/Montserrat-ExtraLight.ttf
+
+    - family: "MontserratLight"
+      fonts:
+        - asset: assets/fonts/Montserrat-Light.ttf
+
+    - family: "MontserratMedium"
+      fonts:
+        - asset: assets/fonts/Montserrat-Medium.ttf
+
+    - family: "MontserratSemiBold"
+      fonts:
+        - asset: assets/fonts/Montserrat-SemiBold.ttf
+
+    - family: "MontserratThin"
+      fonts:
+        - asset: assets/fonts/Montserrat-Thin.ttf
