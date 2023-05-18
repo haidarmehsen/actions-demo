@@ -21,11 +21,11 @@ jobs:
       - run: cat hello
       - run: echo ${{github.run_number}}
       - run: cat pubspec.yaml
-      # Get version from pubspec.yaml version is of form: version: 100.9.0
+      # Get version from pubspec.yaml version is of form: version: 100.9.0 and append to it +${{github.run_number}}
       - name: Get version
         id: get_version
         run: |
-          echo ::set-output name=version::$(cat pubspec.yaml | grep version | cut -d' ' -f2 | sed 's/\"//g')
+          echo "::set-output name=version::$(cat pubspec.yaml | grep version | cut -d' ' -f2)+${{github.run_number}}"
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
