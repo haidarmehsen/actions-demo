@@ -28,7 +28,7 @@ jobs:
           echo ::set-output name=version::$(cat pubspec.yaml | grep version | cut -d' ' -f2 | sed 's/\"//g')
       - name: subtract number of workflow runs -1 from github run number and append to version using + sign
         run: |
-          echo ::set-output name=version::${{ steps.get_version.outputs.version }}+${{${{github.run_number}}-28}}
+          echo ::set-output name=version::${{ steps.get_version.outputs.version }}+${{github.run_number}}-28
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
