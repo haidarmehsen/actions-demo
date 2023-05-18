@@ -9,7 +9,7 @@ jobs:
   build:
     permissions: write-all
     name: Build & Release
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - name: Upload Artifacts
@@ -20,17 +20,15 @@ jobs:
             hello
       - run: cat hello
       - run: echo ${{github.run_number}}
+      # Get version from pubspec.yaml version is of form: version: 100.9.0+101
       - name: Get version
-        id: yq
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq -r '.version' 'pubspec.yaml'
-      - run: echo ${{ steps.yq.outputs.stdout }}
-
+        id: get_version
+        run: |
+          echo "::set-output name=version::$(awk '/^version:/ {print $2}' pubspec.yaml)"
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
           artifacts: "hello"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ steps.yq.outputs.stdout }}
+          tag: v${{ steps.get_version.outputs.stdout }}
           allowUpdates: true
