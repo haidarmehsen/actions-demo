@@ -21,12 +21,14 @@ jobs:
       - run: cat hello
       - run: echo ${{github.run_number}}
       - run: cat pubspec.yaml
-      # Get version from pubspec.yaml version is of form: version: 100.9.0 and append to it +${{github.run_number}}
+      # Get version from pubspec.yaml version is of form: version: 100.9.0
       - name: Get version
         id: get_version
         run: |
-          echo ::set-output name=version::$(cat pubspec.yaml | grep version | cut -d' ' -f2 | sed 's/\"//g')+${{github.run_number}}
-      - run: echo ${{ steps.get_version.outputs.version }}
+          echo ::set-output name=version::$(cat pubspec.yaml | grep version | cut -d' ' -f2 | sed 's/\"//g')
+      - name: subtract number of workflow runs -1 from github run number and append to version using + sign
+        run: |
+          echo ::set-output name=version::${{ steps.get_version.outputs.version }}+${{${{github.run_number}}-28}}
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
