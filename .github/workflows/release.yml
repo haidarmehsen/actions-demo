@@ -49,7 +49,7 @@ jobs:
           sed -i '' "s/def flutterVersionCode = localProperties.getProperty('flutter.versionCode')/def flutterVersionCode = '${{ steps.get_version.outputs.version }}'/g" android/app/build.gradle
           sed -i '' "s/def flutterVersionName = localProperties.getProperty('flutter.versionName')/def flutterVersionName = '${{ steps.get_version.outputs.version }}'/g" android/app/build.gradle
           cat android/app/build.gradle
-      - cat android/app/build.gradle
+      - run: cat android/app/build.gradle
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
