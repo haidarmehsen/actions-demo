@@ -34,27 +34,22 @@ jobs:
           echo "::set-output name=version::$(cat pubspec.yaml | grep android_version_code: | cut -d' ' -f2)"
       - run: echo ${{ steps.get_version_code.outputs.version }}
       # change the version in build.gradle to match the version in pubspec.yaml
-      - name: Set version in build.gradle
-        # in build.gradle, it is of the form:
-        # def flutterVersionCode = localProperties.getProperty('flutter.versionCode') # this one should be replaced by the version code in pubspec.yaml
+      - name: Set versions in build.gradle
+        # in build.gradle we have:
+        # def flutterVersionCode = '1'
         #if (flutterVersionCode == null) {
         #    flutterVersionCode = '1'
         #}
         #
-        #def flutterVersionName = localProperties.getProperty('flutter.versionName') # this one should be changed to match the version in pubspec.yaml
+        #def flutterVersionName = ''
         #if (flutterVersionName == null) {
         #    flutterVersionName = '1.0'
         #}
-        # ...
-        #    defaultConfig {
-        #        ...
-        #        targetSdkVersion flutter.targetSdkVersion
-        #        versionCode flutterVersionCode.toInteger()
-        #        versionName flutterVersionName
-        #    }
+        # flutterVersionCode value must be replaced with output of step get_version_code
+        # flutterVersionName value must be replaced with output of step get_version_name
         run: |
-          sed -i '' "s/def flutterVersionCode = localProperties.getProperty('flutter.versionCode')/def flutterVersionCode = '${{ steps.get_version_code.outputs.version }}'/" build.gradle
-          sed -i '' "s/def flutterVersionName = localProperties.getProperty('flutter.versionName')/def flutterVersionName = '${{ steps.get_version_name.outputs.version }}'/" build.gradle
+          sed -i '' "s/def flutterVersionCode = '1'/def flutterVersionCode = '${{ steps.get_version_code.outputs.version }}'/" build.gradle
+          sed -i '' "s/def flutterVersionName = ''/def flutterVersionName = '${{ steps.get_version_name.outputs.version }}'/" build.gradle
       - run: cat build.gradle
       - name: Push to Releases
         uses: ncipollo/release-action@v1
