@@ -39,7 +39,7 @@ jobs:
       - name: Get github release version name
         id: get_github_release_version_name
         run: |
-          echo "::set-output name=version::$(cat pubspec.yaml | grep version: | cut -d' ' -f2)+${{ ${{ github.run_number }} - 1 }}"
+          echo "::set-output name=version::$(cat pubspec.yaml | grep version: | cut -d' ' -f2)+${{github.run_number}}"
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
