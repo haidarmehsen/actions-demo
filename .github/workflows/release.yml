@@ -39,7 +39,7 @@ jobs:
       - name: Get github release version name
         id: get_github_release_version_name
         run: |
-          run_number=$((github.run_number - 56))
+          run_number=$(( ${{ github.run_number }} - 58 ))
           echo run number is $run_number
           echo "::set-output name=version::$(cat pubspec.yaml | grep version: | cut -d' ' -f2)+${run_number}"
       - name: Push to Releases
