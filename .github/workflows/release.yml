@@ -59,5 +59,5 @@ jobs:
         with:
           artifacts: "hello"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ steps.get_version.outputs.version }}
+          tag: v${{ steps.get_version_name.outputs.version }}
           removeArtifacts: true
