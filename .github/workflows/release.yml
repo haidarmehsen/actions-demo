@@ -26,11 +26,13 @@ jobs:
         id: get_version_name
         run: |
           echo "::set-output name=version::$(cat pubspec.yaml | grep version: | cut -d' ' -f2)+${{github.run_number}}"
+      - run: echo ${{ steps.get_version_name.outputs.version }}
       - name: Get version code
         # Get version code from pubspec.yaml version code is of form: android_version_code: 123
         id: get_version_code
         run: |
           echo "::set-output name=version::$(cat pubspec.yaml | grep android_version_code: | cut -d' ' -f2)"
+      - run: echo ${{ steps.get_version_code.outputs.version }}
       # change the version in build.gradle to match the version in pubspec.yaml
       - name: Set version in build.gradle
         # in build.gradle, it is of the form:
