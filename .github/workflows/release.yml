@@ -21,12 +21,13 @@ jobs:
       - run: cat hello
       - run: echo ${{github.run_number}}
       - run: cat pubspec.yaml
-      # Get version from pubspec.yaml version is of form: version: 100.9.0 and append to it +${{github.run_number}}
       - name: Get version name
+        # Get version name from pubspec.yaml version is of form: version: 100.9.0 and append to it +${{github.run_number}}
         id: get_version_name
         run: |
-          echo "::set-output name=version::$(cat pubspec.yaml | grep version | cut -d' ' -f2)+${{github.run_number}}"
-      - name: Get version code # defined under key android_version_code
+          echo "::set-output name=version::$(cat pubspec.yaml | grep version: | cut -d' ' -f2)+${{github.run_number}}"
+      - name: Get version code
+        # Get version code from pubspec.yaml version code is of form: android_version_code: 123
         id: get_version_code
         run: |
           echo "::set-output name=version::$(cat pubspec.yaml | grep android_version_code: | cut -d' ' -f2)"
@@ -49,13 +50,9 @@ jobs:
         #        versionCode flutterVersionCode.toInteger()
         #        versionName flutterVersionName
         #    }
-#        run: |
-#          sed -i '' "s/def flutterVersionCode = localProperties.getProperty('flutter.versionCode')/def flutterVersionCode = '${{ steps.get_version.outputs.version }}'/g" build.gradle
-#          sed -i '' "s/def flutterVersionName = localProperties.getProperty('flutter.versionName')/def flutterVersionName = '${{ steps.get_version.outputs.version }}'/g" build.gradle
-#          cat build.gradle
         run: |
-          sed -i '' "s/def flutterVersionCode = localProperties.getProperty('flutter.versionCode')/def flutterVersionCode = '${{ steps.get_version_code.outputs.version }}'/g" build.gradle
-          sed -i '' "s/def flutterVersionName = localProperties.getProperty('flutter.versionName')/def flutterVersionName = '${{ steps.get_version_name.outputs.version }}'/g" build.gradle
+          sed -i '' "s/def flutterVersionCode = localProperties.getProperty('flutter.versionCode')/def flutterVersionCode = '${{ steps.get_version_code.outputs.version }}'/" build.gradle
+          sed -i '' "s/def flutterVersionName = localProperties.getProperty('flutter.versionName')/def flutterVersionName = '${{ steps.get_version_name.outputs.version }}'/" build.gradle
           cat build.gradle
       - name: Push to Releases
         uses: ncipollo/release-action@v1
