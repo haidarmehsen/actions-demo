@@ -22,35 +22,21 @@ jobs:
       - run: echo ${{github.run_number}}
       - run: cat pubspec.yaml
       - name: Get version name
-        # Get version name from pubspec.yaml version is of form: version: 100.9.0 and append to it +${{github.run_number}}
+        # Get version name from pubspec.yaml - version name is found under key "version" - and append to it "+${{github.run_number}}"
         id: get_version_name
         run: |
           echo "::set-output name=version::$(cat pubspec.yaml | grep version: | cut -d' ' -f2)+${{github.run_number}}"
-      - run: echo ${{ steps.get_version_name.outputs.version }}
       - name: Get version code
-        # Get version code from pubspec.yaml version code is of form: android_version_code: 123
+        # Get version code from pubspec.yaml - version code is found under key "android_version_code"
         id: get_version_code
         run: |
           echo "::set-output name=version::$(cat pubspec.yaml | grep android_version_code: | cut -d' ' -f2)"
-      - run: echo ${{ steps.get_version_code.outputs.version }}
-      # change the version in build.gradle to match the version in pubspec.yaml
+      # change the versions in build.gradle to match the version in pubspec.yaml
       - name: Set versions in build.gradle
-        # in build.gradle we have:
-        # def flutterVersionCode = '1'
-        #if (flutterVersionCode == null) {
-        #    flutterVersionCode = '1'
-        #}
-        #
-        #def flutterVersionName = ''
-        #if (flutterVersionName == null) {
-        #    flutterVersionName = '1.0'
-        #}
-        # flutterVersionCode value must be replaced with output of step get_version_code
-        # flutterVersionName value must be replaced with output of step get_version_name
         run: |
-          sed -i '' "s/def flutterVersionCode = '1'/def flutterVersionCode = '${{ steps.get_version_code.outputs.version }}'/" build.gradle
-          sed -i '' "s/def flutterVersionName = ''/def flutterVersionName = '${{ steps.get_version_name.outputs.version }}'/" build.gradle
-      - run: cat build.gradle
+          sed -i '' "s/def flutterVersionCode = '1'/def flutterVersionCode = '${{ steps.get_version_code.outputs.version }}'/" build.gradle &&
+          sed -i '' "s/def flutterVersionName = ''/def flutterVersionName = '${{ steps.get_version_name.outputs.version }}'/" build.gradle &&
+          cat build.gradle
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
