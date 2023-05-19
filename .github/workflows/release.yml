@@ -31,22 +31,15 @@ jobs:
         id: get_version_code
         run: |
           echo "::set-output name=version::$(cat pubspec.yaml | grep android_version_code: | cut -d' ' -f2)"
-      # change the versions in build.gradle to match the version in pubspec.yaml
-      # the corresponding section in build.gradle looks like this:
-      #def flutterRoot = localProperties.getProperty('flutter.sdk')
-      #if (flutterRoot == null) {
-      #    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-      #}
-      #
-      #def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-      #if (flutterVersionCode == null) {
-      #    flutterVersionCode = '1'
-      #}
       - name: Set versions in build.gradle
         run: |
           sed -i '' "s/def flutterVersionCode = localProperties.getProperty('flutter.versionCode')/def flutterVersionCode = '${{ steps.get_version_code.outputs.version }}'/" android/app/build.gradle &&
           sed -i '' "s/def flutterVersionName = localProperties.getProperty('flutter.versionName')/def flutterVersionName = '${{ steps.get_version_name.outputs.version }}'/" android/app/build.gradle &&
           cat android/app/build.gradle
+      - name: Get github release version name
+        id: get_github_release_version_name
+        run: |
+          echo "::set-output name=version::$(cat pubspec.yaml | grep version: | cut -d' ' -f2)+${{ ${{ github.run_number }} - 1 }}"
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
