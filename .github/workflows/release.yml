@@ -46,5 +46,7 @@ jobs:
           artifacts: "hello"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{ steps.get_github_release_version_name.outputs.version }}
+          removeArtifacts: true
+          replacesArtifacts: true
           allowUpdates: true
           makeLatest: true
