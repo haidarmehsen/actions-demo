@@ -1,7 +1,7 @@
 name: stories
 description: Stories mobile app.
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.devv
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 version: 11.12.13.14
 
