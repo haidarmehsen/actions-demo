@@ -6,7 +6,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.0.1
 
 android_version: 1.0.0
-android_version_code: 1
+android_version_code: 2
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
