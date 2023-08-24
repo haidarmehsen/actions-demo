@@ -39,10 +39,9 @@ jobs:
       - name: Get github release version name
         id: get_github_release_version_name
         run: |
-          run_number=$(( ${{ github.run_number }} - 58 ))
-          echo "::set-output name=version::$(cat pubspec.yaml | grep android_version: | cut -d' ' -f2)+${run_number}"
+          echo "::set-output name=version::${{ steps.get_version_name.outputs.version }}+${{ steps.get_version_code.outputs.version }}"
       - name: Push to Releases
-        uses: ncipollo/release-action@v1.13
+        uses: ncipollo/release-action@v1.13.0
         with:
           artifacts: "hello"
           token: ${{ secrets.GITHUB_TOKEN }}
