@@ -3,10 +3,10 @@ description: Stories mobile app!
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 11.12.13.14
+version: 0.0.1
 
-android_version: 100.200.300.400
-android_version_code: 102030
+android_version: 1.0.0
+android_version_code: 1
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
