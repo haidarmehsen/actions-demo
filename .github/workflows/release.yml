@@ -22,10 +22,10 @@ jobs:
       - run: echo ${{github.run_number}}
       - run: cat pubspec.yaml
       - name: Get version name
-        # Get version name from pubspec.yaml - version name is found under key "version" - and append to it "+${{github.run_number}}"
+        # Get version name from pubspec.yaml - version name is found under key "android_version" - and append to it "+${{github.run_number}}"
         id: get_version_name
         run: |
-          echo "::set-output name=version::$(cat pubspec.yaml | grep version: | cut -d' ' -f2)"
+          echo "::set-output name=version::$(cat pubspec.yaml | grep android_version: | cut -d' ' -f2)"
       - name: Get version code
         # Get version code from pubspec.yaml - version code is found under key "android_version_code"
         id: get_version_code
