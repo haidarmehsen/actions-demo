@@ -48,7 +48,7 @@ jobs:
           echo "we are at: $(pwd)"
           echo "listing files in current directory:"
           ls
-          mkdir artifacts
+          mkdir -p artifacts
           cp build/app/outputs/flutter-apk/app-release.apk \ 
           artifacts/app-dev-v$version_name-build-$version_code.apk
           echo "copied apk"
