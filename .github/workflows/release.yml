@@ -31,6 +31,8 @@ jobs:
         id: create_release_artifacts_for_dev_server
         run: |
           # Simulate building the artifacts
+          mkdir -p build/app/outputs/flutter-apk
+          mkdir -p build/app/outputs/bundle/release
           touch build/app/outputs/flutter-apk/app-release.apk
           touch build/app/outputs/bundle/release/app-release.aab
           # Rename and move the artifacts to a folder called artifacts in the root of the project
