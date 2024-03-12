@@ -1,5 +1,9 @@
+# This workflow releases the app to github releases
+# page the app bundle and the apks for all the architectures.
+
 on:
   workflow_dispatch:
+  # Uncomment the following lines to enable automatic builds on push to the dev branch
   push:
     branches:
       - main
@@ -10,42 +14,60 @@ jobs:
     permissions: write-all
     name: Build & Release
     runs-on: macos-latest
+    ##    needs: test # TODO: Uncomment later when the android tests are ready
     steps:
-      - uses: actions/checkout@v3
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+      # Get version and build number from pubspec.yaml
+      - name: Get version name and build number
+        id: get_version_name_and_code
+        run: |
+          version=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $1}' | awk '{print $2}')
+          version_code=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $2}')
+          echo "::set-output name=::"
+          echo "{version_name}=${version}" >> $GITHUB_OUTPUT
+          echo "{version_code}=${version_code}" >> $GITHUB_OUTPUT
+      # Build release artifacts for dev server
+      - name: Create release artifacts for dev server
+        id: create_release_artifacts_for_dev_server
+        run: |
+          # Simulate building the artifacts
+          touch build/app/outputs/flutter-apk/app-release.apk
+          touch build/app/outputs/bundle/release/app-release.aab
+          # Rename and move the artifacts to a folder called artifacts in the root of the project
+          version_name=${{ steps.get_version_name_and_code.outputs.version_name }}
+          version_code=${{ steps.get_version_name_and_code.outputs.version_code }}
+          echo "built apks"
+          echo "we are at: $(pwd)"
+          echo "listing files in current directory:"
+          ls
+          mkdir -p artifacts
+          cp build/app/outputs/flutter-apk/app-release.apk \ 
+          artifacts/app-dev-v$version_name-build-$version_code.apk
+          echo "copied apk"
+          cp build/app/outputs/bundle/release/app-release.aab \
+          artifacts/app-dev-v$version_name-build-$version_code.aab
+          echo "copied aab"
+
+      - name: Upload all the artifacts in the artifacts folder
+        uses: actions/upload-artifact@v4.3.1
         with:
           name: app-release
           path: |
-            hello
-      - run: cat hello
-      - run: echo ${{github.run_number}}
-      - run: cat pubspec.yaml
-      - name: Get version name
-        # Get version name from pubspec.yaml - version name is found under key "android_version" - and append to it "+${{github.run_number}}"
-        id: get_version_name
-        run: |
-          echo "::set-output name=version::$(cat pubspec.yaml | grep android_version: | cut -d' ' -f2)"
-      - name: Get version code
-        # Get version code from pubspec.yaml - version code is found under key "android_version_code"
-        id: get_version_code
-        run: |
-          echo "::set-output name=version::$(cat pubspec.yaml | grep android_version_code: | cut -d' ' -f2)"
-      - name: Set versions in build.gradle
-        run: |
-          sed -i '' "s/def flutterVersionCode = localProperties.getProperty('flutter.versionCode')/def flutterVersionCode = '${{ steps.get_version_code.outputs.version }}'/" android/app/build.gradle &&
-          sed -i '' "s/def flutterVersionName = localProperties.getProperty('flutter.versionName')/def flutterVersionName = '${{ steps.get_version_name.outputs.version }}'/" android/app/build.gradle &&
-          cat android/app/build.gradle
-      - name: Get github release version name
+            artifacts/app-dev-v${{ steps.get_version_name_and_code.outputs.version_name }}\
+            -build-${{ steps.get_version_name_and_code.outputs.version_code }}.apk
+            artifacts/app-dev-v${{ steps.get_version_name_and_code.outputs.version_name }}\
+            -build-${{ steps.get_version_name_and_code.outputs.version_code }}.aab
+      - name: Get github release version name # it is in the form : android_version+android_version_code
         id: get_github_release_version_name
         run: |
-          echo "::set-output name=version::${{ steps.get_version_name.outputs.version }}+${{ steps.get_version_code.outputs.version }}"
+          echo "::set-output name=github_release_version_name::${{ steps.get_version_name_and_code.outputs.version_name }}+${{ steps.get_version_name_and_code.outputs.version_code }}"
       - name: Push to Releases
-        uses: ncipollo/release-action@v1.13.0
+        uses: ncipollo/release-action@v1.14.0
         with:
-          artifacts: "hello"
+          artifacts: "artifacts/*"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ steps.get_github_release_version_name.outputs.version }}
+          tag: v${{ steps.get_github_release_version_name.outputs.github_release_version_name }}
           removeArtifacts: true
           replacesArtifacts: true
           allowUpdates: true
