@@ -24,8 +24,10 @@ jobs:
         run: |
           version=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $1}' | awk '{print $2}')
           version_code=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $2}')
-          echo "{version_name}=${version}" >> $GITHUB_OUTPUT
-          echo "{version_code}=${version_code}" >> $GITHUB_OUTPUT
+          echo "pubspec.yaml contents:"
+          cat pubspec.yaml
+          echo "{version_name}=$version" >> $GITHUB_OUTPUT
+          echo "{version_code}=$version_code" >> $GITHUB_OUTPUT
       # Build release artifacts for dev server
       - name: Create release artifacts for dev server
         id: create_release_artifacts_for_dev_server
@@ -38,6 +40,8 @@ jobs:
           # Rename and move the artifacts to a folder called artifacts in the root of the project
           version_name=${{ steps.get_version_name_and_code.outputs.version_name }}
           version_code=${{ steps.get_version_name_and_code.outputs.version_code }}
+          echo "version_name: $version_name"
+          echo "version_code: $version_code"
           echo "built apks"
           echo "we are at: $(pwd)"
           echo "listing files in current directory:"
