@@ -24,7 +24,6 @@ jobs:
         run: |
           version=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $1}' | awk '{print $2}')
           version_code=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $2}')
-          echo "::set-output name=::"
           echo "{version_name}=${version}" >> $GITHUB_OUTPUT
           echo "{version_code}=${version_code}" >> $GITHUB_OUTPUT
       # Build release artifacts for dev server
