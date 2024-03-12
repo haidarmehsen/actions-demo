@@ -1,5 +1,4 @@
-# This workflow releases the app to github releases
-# page the app bundle and the apks for all the architectures.
+# This workflow releases the app to github releases section in the repository
 
 on:
   workflow_dispatch:
@@ -14,65 +13,61 @@ jobs:
     permissions: write-all
     name: Build & Release
     runs-on: macos-latest
-    ##    needs: test # TODO: Uncomment later when the android tests are ready
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.1.1
+
       # Get version and build number from pubspec.yaml
       - name: Get version name and build number
         id: get_version_name_and_code
         run: |
           version=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $1}' | awk '{print $2}')
           version_code=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $2}')
-          echo "pubspec.yaml contents:"
-          cat pubspec.yaml
           echo "version_name=$version" >> $GITHUB_OUTPUT
           echo "version_code=$version_code" >> $GITHUB_OUTPUT
-          echo "version=$version"
-          echo "version_code=$version_code"
-      # Build release artifacts for dev server
+
+      # Simulate Building release artifacts for dev server
       - name: Create release artifacts for dev server
         id: create_release_artifacts_for_dev_server
         run: |
-          # Simulate building the artifacts
           mkdir -p build/app/outputs/flutter-apk
           mkdir -p build/app/outputs/bundle/release
           touch build/app/outputs/flutter-apk/app-release.apk
           touch build/app/outputs/bundle/release/app-release.aab
-          # Rename and move the artifacts to a folder called artifacts in the root of the project
+          
+          # Rename and move the artifacts to a folder called artifacts in the root of the project:
+          
+          # first set version_name and version_code as variables to shorten the command
           version_name=${{ steps.get_version_name_and_code.outputs.version_name }}
           version_code=${{ steps.get_version_name_and_code.outputs.version_code }}
-          echo "version_name: $version_name"
-          echo "version_code: $version_code"
-          echo "built apks"
-          echo "we are at: $(pwd)"
-          echo "listing files in current directory:"
-          ls
+          
+          # Create the artifacts folder and copy the artifacts to it
           mkdir -p artifacts
           cp build/app/outputs/flutter-apk/app-release.apk artifacts/app-dev-v$version_name-build-$version_code.apk
-          echo "copied apk"
           cp build/app/outputs/bundle/release/app-release.aab artifacts/app-dev-v$version_name-build-$version_code.aab
-          echo "copied aab"
 
       - name: Upload all the artifacts in the artifacts folder
         uses: actions/upload-artifact@v4.3.1
         with:
           name: app-release
           path: |
-            artifacts/app-dev-v${{ steps.get_version_name_and_code.outputs.version_name }}\
-            -build-${{ steps.get_version_name_and_code.outputs.version_code }}.apk
-            artifacts/app-dev-v${{ steps.get_version_name_and_code.outputs.version_name }}\
-            -build-${{ steps.get_version_name_and_code.outputs.version_code }}.aab
-      - name: Get github release version name # it is in the form : android_version+android_version_code
-        id: get_github_release_version_name
+            artifacts/*
+
+      - name: Set github release version name
+        id: set_github_release_version_name
         run: |
-          echo "::set-output name=github_release_version_name::${{ steps.get_version_name_and_code.outputs.version_name }}+${{ steps.get_version_name_and_code.outputs.version_code }}"
+          # first set version_name and version_code as variables to shorten the command
+          version_name=${{ steps.get_version_name_and_code.outputs.version_name }}
+          version_code=${{ steps.get_version_name_and_code.outputs.version_code }}
+          
+          echo "github_release_version_name=$version_name+build.$version_code" >> $GITHUB_OUTPUT
+          
       - name: Push to Releases
         uses: ncipollo/release-action@v1.14.0
         with:
           artifacts: "artifacts/*"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ steps.get_github_release_version_name.outputs.github_release_version_name }}
+          tag: v${{ steps.set_github_release_version_name.outputs.github_release_version_name }}
           removeArtifacts: true
           replacesArtifacts: true
           allowUpdates: true
