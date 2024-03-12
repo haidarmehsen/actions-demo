@@ -28,6 +28,8 @@ jobs:
           cat pubspec.yaml
           echo "{version_name}=$version" >> $GITHUB_OUTPUT
           echo "{version_code}=$version_code" >> $GITHUB_OUTPUT
+          echo "version=$version"
+          echo "version_code=$version_code"
       # Build release artifacts for dev server
       - name: Create release artifacts for dev server
         id: create_release_artifacts_for_dev_server
