@@ -49,11 +49,9 @@ jobs:
           echo "listing files in current directory:"
           ls
           mkdir -p artifacts
-          cp build/app/outputs/flutter-apk/app-release.apk \ 
-          artifacts/app-dev-v$version_name-build-$version_code.apk
+          cp build/app/outputs/flutter-apk/app-release.apk artifacts/app-dev-v$version_name-build-$version_code.apk
           echo "copied apk"
-          cp build/app/outputs/bundle/release/app-release.aab \
-          artifacts/app-dev-v$version_name-build-$version_code.aab
+          cp build/app/outputs/bundle/release/app-release.aab artifacts/app-dev-v$version_name-build-$version_code.aab
           echo "copied aab"
 
       - name: Upload all the artifacts in the artifacts folder
