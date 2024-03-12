@@ -64,6 +64,11 @@ jobs:
 
           echo "contents of artifacts folder:"
           ls -l artifacts
+          echo "contents of build folder:"
+          ls -l build
+          echo "contents of current directory:"
+          ls -l
+          echo "we are at: $PWD"
           
       - name: Push to Releases
         uses: ncipollo/release-action@v1.14.0
