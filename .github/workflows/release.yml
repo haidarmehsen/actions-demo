@@ -34,6 +34,9 @@ jobs:
           mkdir -p build/app/outputs/bundle/release
           touch build/app/outputs/flutter-apk/app-release.apk
           touch build/app/outputs/bundle/release/app-release.aab
+          # write some content to the files
+          echo "This is a test apk file" > build/app/outputs/flutter-apk/app-release.apk
+          echo "This is a test aab file" > build/app/outputs/bundle/release/app-release.aab
           
           # Rename and move the artifacts to a folder called artifacts in the root of the project:
           
