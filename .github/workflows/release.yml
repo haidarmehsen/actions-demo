@@ -49,9 +49,6 @@ jobs:
           cp build/app/outputs/flutter-apk/app-release.apk artifacts/app-dev-v$version_name-build-$version_code.apk
           cp build/app/outputs/bundle/release/app-release.aab artifacts/app-dev-v$version_name-build-$version_code.aab
 
-          echo "contents of artifacts folder:"
-          ls -l artifacts
-
       - name: Upload all the artifacts in the artifacts folder
         uses: actions/upload-artifact@v4.3.1
         with:
@@ -66,14 +63,14 @@ jobs:
           version_name=${{ steps.get_version_name_and_code.outputs.version_name }}
           version_code=${{ steps.get_version_name_and_code.outputs.version_code }}
           
-          echo "github_release_version_name=$version_name+build.$version_code" >> $GITHUB_OUTPUT
+          echo "github_release_version_name=$version_name+$version_code" >> $GITHUB_OUTPUT
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1.14.0
         with:
           artifacts: "artifacts/*"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ steps.set_github_release_version_name.outputs.github_release_version_name }}
+          tag: ${{ steps.set_github_release_version_name.outputs.github_release_version_name }}
           removeArtifacts: true
           replacesArtifacts: true
           allowUpdates: true
