@@ -9,10 +9,30 @@ on:
 name: "Test, Build & Release Android"
 
 jobs:
+  test:
+    permissions: write-all
+    name: Test
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+      - name: Set up JDK
+        uses: actions/setup-java@v3.13.0
+        with:
+          distribution: 'oracle'
+          java-version: '17'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2.12.0
+        with:
+          flutter-version: '3.16.5'
+      - name: Get Flutter dependencies
+        run: flutter pub get
+      - run: flutter test
   build:
     permissions: write-all
     name: Build & Release
     runs-on: macos-latest
+    needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.1.1
