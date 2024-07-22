@@ -17,6 +17,8 @@ jobs:
         run: |
           echo "Printing current working directory path"
           pwd
+          echo "Listing all the files in the current directory"
+          ls -al
           echo "Running the demo script"
           sh -e ./scripts/demo_script.sh
   test:
