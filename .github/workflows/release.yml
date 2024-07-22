@@ -13,6 +13,8 @@ jobs:
     name: Run Demo Script
     runs-on: macos-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
       - name: Run the script
         run: |
           echo "Printing current working directory path"
