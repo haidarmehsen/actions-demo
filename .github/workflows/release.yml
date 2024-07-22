@@ -22,7 +22,7 @@ jobs:
           echo "Listing all the files in the current directory"
           ls -al
           echo "Running the demo script"
-          sh -e ./scripts/demo_script.sh
+          sh -e ./scripts/demo_script.sh Haidar 5
   # test:
   #   permissions: write-all
   #   name: Test
