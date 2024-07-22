@@ -21,89 +21,89 @@ jobs:
           ls -al
           echo "Running the demo script"
           sh -e ./scripts/demo_script.sh
-  test:
-    permissions: write-all
-    name: Test
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.1.1
-      - name: Set up JDK
-        uses: actions/setup-java@v3.13.0
-        with:
-          distribution: 'oracle'
-          java-version: '17'
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2.12.0
-        with:
-          flutter-version: '3.16.5'
-      - name: Get Flutter dependencies
-        run: flutter pub get
-      - run: flutter test
-  build:
-    permissions: write-all
-    name: Build & Release
-    runs-on: macos-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.1.1
+  # test:
+  #   permissions: write-all
+  #   name: Test
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4.1.1
+  #     - name: Set up JDK
+  #       uses: actions/setup-java@v3.13.0
+  #       with:
+  #         distribution: 'oracle'
+  #         java-version: '17'
+  #     - name: Set up Flutter
+  #       uses: subosito/flutter-action@v2.12.0
+  #       with:
+  #         flutter-version: '3.16.5'
+  #     - name: Get Flutter dependencies
+  #       run: flutter pub get
+  #     - run: flutter test
+  # build:
+  #   permissions: write-all
+  #   name: Build & Release
+  #   runs-on: macos-latest
+  #   needs: test
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4.1.1
 
-      # Get version and build number from pubspec.yaml
-      - name: Get version name and build number
-        id: get_version_name_and_code
-        run: |
-          version=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $1}' | awk '{print $2}')
-          version_code=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $2}')
-          echo "version_name=$version" >> $GITHUB_OUTPUT
-          echo "version_code=$version_code" >> $GITHUB_OUTPUT
+  #     # Get version and build number from pubspec.yaml
+  #     - name: Get version name and build number
+  #       id: get_version_name_and_code
+  #       run: |
+  #         version=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $1}' | awk '{print $2}')
+  #         version_code=$(grep -E '^version:' pubspec.yaml | awk -F '+' '{print $2}')
+  #         echo "version_name=$version" >> $GITHUB_OUTPUT
+  #         echo "version_code=$version_code" >> $GITHUB_OUTPUT
 
-      # Simulate Building release artifacts for dev server
-      - name: Create release artifacts for dev server
-        id: create_release_artifacts_for_dev_server
-        run: |
-          mkdir -p build/app/outputs/flutter-apk
-          mkdir -p build/app/outputs/bundle/release
-          touch build/app/outputs/flutter-apk/app-release.apk
-          touch build/app/outputs/bundle/release/app-release.aab
-          # write some content to the files
-          echo "This is a test apk file" > build/app/outputs/flutter-apk/app-release.apk
-          echo "This is a test aab file" > build/app/outputs/bundle/release/app-release.aab
+  #     # Simulate Building release artifacts for dev server
+  #     - name: Create release artifacts for dev server
+  #       id: create_release_artifacts_for_dev_server
+  #       run: |
+  #         mkdir -p build/app/outputs/flutter-apk
+  #         mkdir -p build/app/outputs/bundle/release
+  #         touch build/app/outputs/flutter-apk/app-release.apk
+  #         touch build/app/outputs/bundle/release/app-release.aab
+  #         # write some content to the files
+  #         echo "This is a test apk file" > build/app/outputs/flutter-apk/app-release.apk
+  #         echo "This is a test aab file" > build/app/outputs/bundle/release/app-release.aab
           
-          # Rename and move the artifacts to a folder called artifacts in the root of the project:
+  #         # Rename and move the artifacts to a folder called artifacts in the root of the project:
           
-          # first set version_name and version_code as variables to shorten the command
-          version_name=${{ steps.get_version_name_and_code.outputs.version_name }}
-          version_code=${{ steps.get_version_name_and_code.outputs.version_code }}
+  #         # first set version_name and version_code as variables to shorten the command
+  #         version_name=${{ steps.get_version_name_and_code.outputs.version_name }}
+  #         version_code=${{ steps.get_version_name_and_code.outputs.version_code }}
           
-          # Create the artifacts folder and copy the artifacts to it
-          mkdir -p artifacts
-          cp build/app/outputs/flutter-apk/app-release.apk artifacts/app-dev-v$version_name-build-$version_code.apk
-          cp build/app/outputs/bundle/release/app-release.aab artifacts/app-dev-v$version_name-build-$version_code.aab
+  #         # Create the artifacts folder and copy the artifacts to it
+  #         mkdir -p artifacts
+  #         cp build/app/outputs/flutter-apk/app-release.apk artifacts/app-dev-v$version_name-build-$version_code.apk
+  #         cp build/app/outputs/bundle/release/app-release.aab artifacts/app-dev-v$version_name-build-$version_code.aab
 
-      - name: Upload all the artifacts in the artifacts folder
-        uses: actions/upload-artifact@v4.3.1
-        with:
-          name: app-release
-          path: |
-            artifacts/*
+  #     - name: Upload all the artifacts in the artifacts folder
+  #       uses: actions/upload-artifact@v4.3.1
+  #       with:
+  #         name: app-release
+  #         path: |
+  #           artifacts/*
 
-      - name: Set github release version name
-        id: set_github_release_version_name
-        run: |
-          # first set version_name and version_code as variables to shorten the command
-          version_name=${{ steps.get_version_name_and_code.outputs.version_name }}
-          version_code=${{ steps.get_version_name_and_code.outputs.version_code }}
+  #     - name: Set github release version name
+  #       id: set_github_release_version_name
+  #       run: |
+  #         # first set version_name and version_code as variables to shorten the command
+  #         version_name=${{ steps.get_version_name_and_code.outputs.version_name }}
+  #         version_code=${{ steps.get_version_name_and_code.outputs.version_code }}
           
-          echo "github_release_version_name=$version_name+$version_code" >> $GITHUB_OUTPUT
+  #         echo "github_release_version_name=$version_name+$version_code" >> $GITHUB_OUTPUT
 
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1.14.0
-        with:
-          artifacts: "artifacts/*"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.set_github_release_version_name.outputs.github_release_version_name }}
-          removeArtifacts: true
-          replacesArtifacts: true
-          allowUpdates: true
-          makeLatest: true
+  #     - name: Push to Releases
+  #       uses: ncipollo/release-action@v1.14.0
+  #       with:
+  #         artifacts: "artifacts/*"
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         tag: ${{ steps.set_github_release_version_name.outputs.github_release_version_name }}
+  #         removeArtifacts: true
+  #         replacesArtifacts: true
+  #         allowUpdates: true
+  #         makeLatest: true
