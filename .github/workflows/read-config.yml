@@ -1,30 +1,28 @@
 name: Read Config
 
 on:
-  workflow_call:
+    workflow_call:
+        outputs:
+            config:
+                description: "JSON string containing all config values"
+                value: ${{ jobs.set-environment-variables.outputs.config }}
 
 jobs:
-  set-environment-variables:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.7
-        
-      - name: Read config
-        id: read-config
-        run: |
-          echo "Reading config file..."
-          cat ./.github/config.yml  # Debugging output to ensure the file is read
-          
-          while IFS='=' read -r key value; do
-              value=$(echo "$value" | tr -d "'")  # Remove single quotes
-              echo "${key}=${value}" >> $GITHUB_ENV
-              echo "Setting $key=$value"
-          done < <(sed 's/: /=/g' ./.github/config.yml)
-          
-      - name: Show Environment Variables
-        run: |
-          echo "FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}"
-          echo "JAVA_VERSION=${{ env.JAVA_VERSION }}"
-          echo "JAVA_DISTRIBUTION=${{ env.JAVA_DISTRIBUTION }}"
-          echo "myName=${{ env.myName }}"
+    set-environment-variables:
+        runs-on: ubuntu-latest
+        outputs:
+            config: ${{ steps.set_vars.outputs.config }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4.1.7
+            - name: Read all config values and set them as outputs
+              id: set_vars
+              run: |
+                # Read the YAML file and convert it to JSON
+                CONFIG_JSON=$(yq eval -o=json config.yml)
+                # Escape the JSON string to handle multiline output
+                CONFIG_JSON_ESCAPED="${CONFIG_JSON//'%'/'%25'}"
+                CONFIG_JSON_ESCAPED="${CONFIG_JSON_ESCAPED//$'\n'/'%0A'}"
+                CONFIG_JSON_ESCAPED="${CONFIG_JSON_ESCAPED//$'\r'/'%0D'}"
+                # Set the entire config as a single output
+                echo "config=${CONFIG_JSON_ESCAPED}" >> $GITHUB_OUTPUT
