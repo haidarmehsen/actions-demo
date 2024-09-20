@@ -20,7 +20,7 @@ jobs:
         
       - name: Set environment variables
         run: |
-          echo '${{ needs.read-config.outputs.config }}' | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+          echo '${{ needs.read-config.outputs.config }}' | base64 -d | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
         
       - name: Say Hi
         run: echo "Hi, I am the first step in the first job of the first workflow."

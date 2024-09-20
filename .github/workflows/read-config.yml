@@ -4,7 +4,7 @@ on:
   workflow_call:
     outputs:
       config: 
-        description: "The configuration as a JSON string"
+        description: "The configuration as a base64 encoded JSON string"
         value: ${{ jobs.set-environment-variables.outputs.config }}
 
 jobs:
@@ -20,9 +20,12 @@ jobs:
         id: read-config
         run: |
           echo "Reading config file..."
-          config=$(cat ./.github/config.yml | yq eval -o=json)
+          config=$(cat ./.github/config.yml | yq eval -o=json | base64 -w 0)
           echo "config=$config" >> $GITHUB_OUTPUT
-          echo "Config: $config"  # Debug output
+          echo "Config (base64 encoded): $config"  # Debug output
         
       - name: Show Config
-        run: echo "${{ steps.read-config.outputs.config }}"
+        run: |
+          echo "Encoded config: ${{ steps.read-config.outputs.config }}"
+          echo "Decoded config:"
+          echo "${{ steps.read-config.outputs.config }}" | base64 -d | jq .
