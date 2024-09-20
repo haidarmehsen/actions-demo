@@ -11,11 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.7
 
-      - name: Read Configuration and set as output
+      - name: Read Configuration and set outputs dynamically
         id: set-config
         run: |
-          # Read configuration values from config.txt and output them
-          CONFIG=$(cat ./.github/config.txt)
-
-          # Output CONFIG variable (single string with newline replaced by spaces)
-          echo "::set-output name=config::$(echo $CONFIG | tr '\n' ' ')"
+          # Read config.txt and set each key-value pair as an output
+          while IFS= read -r line || [ -n "$line" ]; do
+            key=$(echo "$line" | cut -d ' ' -f 1)
+            value=$(echo "$line" | cut -d ' ' -f 2-)
+            echo "::set-output name=${key}::${value}"
+          done < ./.github/config.txt

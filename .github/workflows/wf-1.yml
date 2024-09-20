@@ -19,12 +19,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.7
 
-      - name: Parse and Use Config Variables
+      - name: Use Config Variables
         run: |
-          # Read CONFIG variable from the previous job
+          # Dynamically access config values
           CONFIG="${{ needs.read-config.outputs.CONFIG }}"
 
-          # Split config into lines and extract each key-value pair
-          echo "$CONFIG" | tr ' ' '\n' | while IFS= read -r line; do
-            key=$(echo "$line" | cut -d ' ' -f 1)
-            value=$(echo "$line" | cut -d ' ' -f 2​⬤
+          echo "Config: $CONFIG"
+          # Example of using the values
+          echo "Flutter version: ${{ needs.read-config.outputs.FLUTTER_VERSION }}"
+          echo "Java version: ${{ needs.read-config.outputs.JAVA_VERSION }}"
