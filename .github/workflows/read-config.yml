@@ -10,4 +10,4 @@ jobs:
       - name: Read Configuration and set outputs
         id: set-config
         run: |
-            echo "CONFIG=$(cat .github/workflows/config.yml)" >> $GITHUB_OUTPUT
+            echo "CONFIG=$(cat .github/workflows/config.yml)" >> $GITHUB_ENV
