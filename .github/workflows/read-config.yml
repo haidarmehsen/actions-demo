@@ -1,18 +1,19 @@
 name: Read Config
 
 on:
-    workflow_call:
+  workflow_call:
 
 jobs:
-    set-environment-variables:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4.1.7
-            - name: Read config
-              id: read-config
-              run: |
-                while IFS='=' read -r key value; do
-                    echo "${key}=${value}" >> $GITHUB_ENV
-                    echo "Setting $key=$value"
-                done < <(sed 's/: /=/g' ./.github/config.yml)
+  set-environment-variables:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - name: Read config
+        id: read-config
+        run: |
+          while IFS='=' read -r key value; do
+              value=$(echo "$value" | tr -d "'")  # Remove single quotes
+              echo "${key}=${value}" >> $GITHUB_ENV
+              echo "Setting $key=$value"
+          done < <(sed 's/: /=/g' ./.github/config.yml)
