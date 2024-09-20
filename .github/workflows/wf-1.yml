@@ -28,6 +28,8 @@ jobs:
           echo "Java version: ${{ env.JAVA_VERSION }}"
           echo "Java distribution: ${{ env.JAVA_DISTRIBUTION }}"
           echo "My name: ${{ env.myName }}"
+          echo "His name: ${{ env.hisName }}"
+          echo "Her name: ${{ env.herName }}"
           
       - name: Show All Config Variables
         run: |
