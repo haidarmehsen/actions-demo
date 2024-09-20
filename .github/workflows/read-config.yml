@@ -4,7 +4,7 @@ on:
   workflow_call:
     outputs:
       CONFIG:
-        description: "The configuration file as key-value pairs"
+        description: "The configuration file as key-value pairs in JSON format"
         value: ${{ jobs.read-config.outputs.CONFIG }}
 
 jobs:
@@ -15,7 +15,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.7
+
       - name: Read Configuration and set outputs
         id: set-config
         run: |
-          echo "CONFIG=$(cat .github/config.txt)" >> $GITHUB_OUTPUT
+          echo "{" > config.json
+          while IFS= read -r line; do
+            key=$(echo "$line" | cut -d '=' -f 1 | tr -d ' ')
+            value=$(echo "$line" | cut -d '=' -f 2 | tr -d "'\" ")
+            echo "  \"$key\": \"$value\"," >> config.json
+          done < .github/config.txt
+          # Remove the last comma and close the JSON
+          sed -i '$ s/,$//' config.json
+          echo "}" >> config.json
+          
+          # Read the config file as a string and set it as an output
+          CONFIG=$(cat config.json)
+          echo "CONFIG=${CONFIG}" >> $GITHUB_OUTPUT

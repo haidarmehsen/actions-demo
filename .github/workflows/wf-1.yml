@@ -21,4 +21,5 @@ jobs:
 
       - name: Use Config Variables
         run: |
-            echo "The value of the config env var is ${{ needs.read-config.outputs.CONFIG }}"
+            echo "fv = ${{ needs.read-config.outputs.CONFIG.FLUTTER_VERSION }}"
+            echo "jv = ${{ needs.read-config.outputs.CONFIG.JAVA_VERSION }}"
