@@ -3,29 +3,27 @@ name: Read Config
 on:
   workflow_call:
     outputs:
-      config: 
-        description: "The configuration as a base64 encoded JSON string"
-        value: ${{ jobs.set-environment-variables.outputs.config }}
+      config:
+        description: "All config variables"
+        value: ${{ jobs.read-config.outputs.config }}
 
 jobs:
-  set-environment-variables:
+  read-config:
     runs-on: ubuntu-latest
     outputs:
-      config: ${{ steps.read-config.outputs.config }}
+      config: ${{ steps.set-output.outputs.config }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.7
         
-      - name: Read config
-        id: read-config
+      - name: Read YAML and set output
+        id: set-output
         run: |
-          echo "Reading config file..."
-          config=$(cat ./.github/config.yml | yq eval -o=json | base64 -w 0)
-          echo "config=$config" >> $GITHUB_OUTPUT
-          echo "Config (base64 encoded): $config"  # Debug output
+          echo "config<<EOF" >> $GITHUB_OUTPUT
+          yq e 'to_entries | map(.key + "=" + .value) | .[]' ./.github/config.yml >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
         
-      - name: Show Config
+      - name: Debug Output
         run: |
-          echo "Encoded config: ${{ steps.read-config.outputs.config }}"
-          echo "Decoded config:"
-          echo "${{ steps.read-config.outputs.config }}" | base64 -d | jq .
+          echo "Config:"
+          echo "${{ steps.set-output.outputs.config }}"

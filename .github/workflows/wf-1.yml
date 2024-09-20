@@ -15,13 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: read-config
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.7
-        
-      - name: Set environment variables
+      - name: Set Config Variables
         run: |
-          echo '${{ needs.read-config.outputs.config }}' | base64 -d | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
-        
+          echo "${{ needs.read-config.outputs.config }}" >> $GITHUB_ENV
+      
       - name: Say Hi
         run: echo "Hi, I am the first step in the first job of the first workflow."
       
@@ -31,3 +28,8 @@ jobs:
           echo "Java version: ${{ env.JAVA_VERSION }}"
           echo "Java distribution: ${{ env.JAVA_DISTRIBUTION }}"
           echo "My name: ${{ env.myName }}"
+          
+      - name: Show All Config Variables
+        run: |
+          echo "All config variables:"
+          env | grep -E "$(yq e 'keys | .[]' ./.github/config.yml | paste -sd '|' -)"
