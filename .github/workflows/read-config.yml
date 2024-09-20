@@ -5,7 +5,7 @@ on:
     outputs:
       config:
         description: "All config variables"
-        value: ${{ steps.set-output.outputs.config }}
+        value: ${{ jobs.steps.set-output.outputs.config }}
 
 jobs:
   read-config:
@@ -17,6 +17,5 @@ jobs:
       - name: Read YAML and set output
         id: set-output
         run: |
-          echo "config<<EOF" >> $GITHUB_OUTPUT
-          yq e 'to_entries | map(.key + "=" + .value | gsub("\""; "")) | .[]' ./.github/config.yml >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          CONFIG=$(yq e 'to_entries | map(.key + "=" + (.value | gsub("\""; ""))) | join(",")' ./.github/config.yml)
+          echo "config=${CONFIG}" >> $GITHUB_OUTPUT
