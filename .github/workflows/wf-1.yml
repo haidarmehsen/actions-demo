@@ -21,10 +21,4 @@ jobs:
 
       - name: Use Config Variables
         run: |
-          # Dynamically access config values
-          CONFIG="${{ needs.read-config.outputs.CONFIG }}"
-
-          echo "Config: $CONFIG"
-          # Example of using the values
-          echo "Flutter version: ${{ needs.read-config.outputs.FLUTTER_VERSION }}"
-          echo "Java version: ${{ needs.read-config.outputs.JAVA_VERSION }}"
+            echo "The value of the config env var is ${{ env.CONFIG }}"

@@ -6,17 +6,8 @@ on:
 jobs:
   read-config:
     runs-on: ubuntu-latest
-    outputs:
-      CONFIG: ${{ steps.set-config.outputs.config }}
     steps:
-      - uses: actions/checkout@v4.1.7
-
-      - name: Read Configuration and set outputs dynamically
+      - name: Read Configuration and set outputs
         id: set-config
         run: |
-          # Read config.txt and set each key-value pair as an output
-          while IFS= read -r line || [ -n "$line" ]; do
-            key=$(echo "$line" | cut -d ' ' -f 1)
-            value=$(echo "$line" | cut -d ' ' -f 2-)
-            echo "::set-output name=${key}::${value}"
-          done < ./.github/config.txt
+            echo "CONFIG=$(cat .github/workflows/config.yml)" >> $GITHUB_OUTPUT
