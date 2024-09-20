@@ -22,7 +22,7 @@ jobs:
       - name: Use Config Variables
         run: |
           # Convert CONFIG output to environment variables
-          echo "${{ needs.read-config.outputs.config }}" | while IFS='=' read -r key value; do
+          echo "${{ needs.read-config.outputs.config }}" | tr ',' '\n' | while IFS='=' read -r key value; do
             echo "${key}=${value}" >> $GITHUB_ENV
           done
 
@@ -32,3 +32,5 @@ jobs:
           echo "Java version: $JAVA_VERSION"
           echo "Java distribution: $JAVA_DISTRIBUTION"
           echo "My name: $myName"
+          echo "His name: $hisName"
+          echo "Her name: $herName"
