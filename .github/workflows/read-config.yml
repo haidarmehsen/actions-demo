@@ -1,0 +1,15 @@
+name: Read Config
+
+on:
+    workflow_call:
+
+jobs:
+    set-environment-variables:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Read config
+              id: read-config
+              run: |
+                while IFS='=' read -r key value; do
+                    echo "${key}=${value}" >> $GITHUB_ENV
+                done < <(sed 's/: /=/g' .github/config.yml)
