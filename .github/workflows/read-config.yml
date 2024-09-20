@@ -12,4 +12,5 @@ jobs:
               run: |
                 while IFS='=' read -r key value; do
                     echo "${key}=${value}" >> $GITHUB_ENV
+                    echo "Setting $key=$value"
                 done < <(sed 's/: /=/g' .github/config.yml)
