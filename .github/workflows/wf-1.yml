@@ -21,16 +21,9 @@ jobs:
 
       - name: Use Config Variables
         run: |
-          # Convert CONFIG output to environment variables
-          echo "${{ needs.read-config.outputs.config }}" | tr ',' '\n' | while IFS='=' read -r key value; do
-            echo "${key}=${value}" >> $GITHUB_ENV
-          done
-
-      - name: Show Config Variables
-        run: |
-          echo "Flutter version: $FLUTTER_VERSION"
-          echo "Java version: $JAVA_VERSION"
-          echo "Java distribution: $JAVA_DISTRIBUTION"
-          echo "My name: $myName"
-          echo "His name: $hisName"
-          echo "Her name: $herName"
+          echo "Flutter version: ${{ needs.read-config.outputs.FLUTTER_VERSION }}"
+          echo "Java version: ${{ needs.read-config.outputs.JAVA_VERSION }}"
+          echo "Java distribution: ${{ needs.read-config.outputs.JAVA_DISTRIBUTION }}"
+          echo "My name: ${{ needs.read-config.outputs.myName }}"
+          echo "His name: ${{ needs.read-config.outputs.hisName }}"
+          echo "Her name: ${{ needs.read-config.outputs.herName }}"

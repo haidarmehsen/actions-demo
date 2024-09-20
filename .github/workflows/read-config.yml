@@ -1,21 +1,17 @@
-name: Read Config
+name: Read Configuration
 
 on:
   workflow_call:
-    outputs:
-      config:
-        description: "All config variables"
-        value: ${{ jobs.steps.set-output.outputs.config }}
 
 jobs:
   read-config:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.7
-
-      - name: Read YAML and set output
-        id: set-output
+      - uses: actions/checkout@v4.1.7
+      - name: Read Configuration
         run: |
-          CONFIG=$(yq e 'to_entries | map(.key + "=" + .value | gsub("\"", "")) | join(",")' ./.github/config.yml)
-          echo "config=${CONFIG}" >> $GITHUB_OUTPUT
+          while IFS= read -r line; do
+            key=$(echo "$line" | cut -d ' ' -f 1)
+            value=$(echo "$line" | cut -d ' ' -f 2-)
+            echo "::set-output name=${key}::${value}"
+          done < config.txt
