@@ -1,25 +1,22 @@
 name: Read Configuration
 
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - 'config.txt'
+  workflow_call:
 
 jobs:
   read-config:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.7
+
       - name: Read Configuration
-        env:
-          CONFIG: $(cat config.txt)
         run: |
-          # Access configuration values directly using $CONFIG environment variable
-          IFS= read -r -d '' line
-          while [[ -n "$line" ]]; do
+          # Access the configuration values directly
+          CONFIG=$(cat config.txt)
+
+          # Read line by line and set environment variables using GITHUB_ENV
+          while IFS= read -r line || [ -n "$line" ]; do
             key=$(echo "$line" | cut -d ' ' -f 1)
             value=$(echo "$line" | cut -d ' ' -f 2-)
-            echo "::set-env name=${key}::${value}"
-            read -r -d '' line
-          done < <(echo "$CONFIG")
+            echo "${key}=${value}" >> $GITHUB_ENV
+          done <<< "$CONFIG"
