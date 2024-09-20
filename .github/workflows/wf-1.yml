@@ -21,4 +21,4 @@ jobs:
 
       - name: Use Config Variables
         run: |
-            echo "The value of the config env var is ${{ env.CONFIG }}"
+            echo "The value of the config env var is ${{ needs.read-config.outputs.CONFIG }}"
