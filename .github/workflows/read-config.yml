@@ -17,6 +17,8 @@ jobs:
   read-config:
     runs-on: ubuntu-latest
     steps:
+        - name: Checkout
+          uses: actions/checkout@v4.1.7
         - name: Report
           run: echo "Read configuration"
         - name: Create a file
