@@ -16,5 +16,5 @@ jobs:
       - name: Read Configuration and set outputs
         id: set-config
         run: |
-          CONFIG=$(cat ./.github/config.yml)
+          CONFIG=$(cat .github/config.yml)
           echo "CONFIG=${CONFIG}" >> $GITHUB_OUTPUT
