@@ -23,3 +23,13 @@ jobs:
         run: |
             echo "fv = ${{ needs.read-config.outputs.FLUTTER_VERSION }}"
             echo "jv = ${{ needs.read-config.outputs.JAVA_VERSION }}"
+
+      - name: Test Step
+        id: test_step
+        run: |
+          name="Haidar"
+          echo "name=$name" >> $GITHUB_OUTPUT
+
+      - name: Use Test Step
+        run: |
+          echo "name is ${{steps.test_step.outputs.name}}"
