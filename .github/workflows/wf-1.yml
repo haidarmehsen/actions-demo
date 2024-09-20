@@ -21,5 +21,5 @@ jobs:
 
       - name: Use Config Variables
         run: |
-            echo "fv = ${{ needs.read-config.outputs.CONFIG.FLUTTER_VERSION }}"
-            echo "jv = ${{ needs.read-config.outputs.CONFIG.JAVA_VERSION }}"
+            echo "fv = ${{ needs.read-config.outputs.FLUTTER_VERSION }}"
+            echo "jv = ${{ needs.read-config.outputs.JAVA_VERSION }}"
