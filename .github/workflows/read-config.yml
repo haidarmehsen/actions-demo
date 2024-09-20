@@ -12,7 +12,7 @@ jobs:
       - name: Read Configuration
         run: |
           # Access the configuration values directly
-          CONFIG=$(cat config.txt)
+          CONFIG=$(cat ./.github/config.txt)
 
           # Read line by line and set environment variables using GITHUB_ENV
           while IFS= read -r line || [ -n "$line" ]; do
