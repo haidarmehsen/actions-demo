@@ -17,5 +17,6 @@ jobs:
       - name: Read YAML and set output
         id: set-output
         run: |
+          # Read config and format it
           CONFIG=$(yq e 'to_entries | map(.key + "=" + (.value | gsub("\""; ""))) | join(",")' ./.github/config.yml)
           echo "config=${CONFIG}" >> $GITHUB_OUTPUT
