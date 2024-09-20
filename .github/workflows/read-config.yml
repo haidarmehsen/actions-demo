@@ -2,10 +2,14 @@ name: Read Config
 
 on:
   workflow_call:
+    outputs:
+      config: ${{ jobs.set-environment-variables.outputs.config }}
 
 jobs:
   set-environment-variables:
     runs-on: ubuntu-latest
+    outputs:
+      config: ${{ steps.read-config.outputs.config }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.7
@@ -14,19 +18,9 @@ jobs:
         id: read-config
         run: |
           echo "Reading config file..."
-          cat ./.github/config.yml  # Debugging output to ensure the file is read
-          
-          # Read and set environment variables
-          while IFS=':' read -r key value; do
-              key=$(echo "$key" | tr -d ' ')  # Trim whitespace from key
-              value=$(echo "$value" | tr -d "'")  # Remove single quotes from value
-              echo "${key}=${value}" >> $GITHUB_ENV
-              echo "Setting $key=$value"
-          done < ./.github/config.yml
-          
-      - name: Show Environment Variables
-        run: |
-          echo "FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}"
-          echo "JAVA_VERSION=${{ env.JAVA_VERSION }}"
-          echo "JAVA_DISTRIBUTION=${{ env.JAVA_DISTRIBUTION }}"
-          echo "myName=${{ env.myName }}"
+          config=$(cat ./.github/config.yml | sed 's/:/=/g' | sed "s/'//g" | tr '\n' ',' | sed 's/,$//')
+          echo "config=$config" >> $GITHUB_OUTPUT
+          echo "Config: $config"  # Debug output
+        
+      - name: Show Config
+        run: echo "${{ steps.read-config.outputs.config }}"
