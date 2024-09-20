@@ -19,3 +19,7 @@ jobs:
     steps:
         - name: Report
           run: echo "Read configuration"
+        - name: Create a file
+          run: |
+            echo "Hello World 123!" >> test.txt
+            echo "read-config workflow created test.txt with content ${cat test.txt}"

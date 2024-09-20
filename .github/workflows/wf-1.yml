@@ -33,3 +33,7 @@ jobs:
       - name: Use Test Step
         run: |
           echo "name is ${{steps.test_step.outputs.name}}"
+
+      - name: Use test.txt created by read-config
+        run: |
+          echo "read-config workflow created test.txt with content ${cat test.txt}"
