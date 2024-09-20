@@ -6,17 +6,16 @@ on:
 jobs:
   read-config:
     runs-on: ubuntu-latest
+    outputs:
+      CONFIG: ${{ steps.set-config.outputs.config }}
     steps:
       - uses: actions/checkout@v4.1.7
 
-      - name: Read Configuration
+      - name: Read Configuration and set as output
+        id: set-config
         run: |
-          # Access the configuration values directly
+          # Read configuration values from config.txt and output them
           CONFIG=$(cat ./.github/config.txt)
 
-          # Read line by line and set environment variables using GITHUB_ENV
-          while IFS= read -r line || [ -n "$line" ]; do
-            key=$(echo "$line" | cut -d ' ' -f 1)
-            value=$(echo "$line" | cut -d ' ' -f 2-)
-            echo "${key}=${value}" >> $GITHUB_ENV
-          done <<< "$CONFIG"
+          # Output CONFIG variable (single string with newline replaced by spaces)
+          echo "::set-output name=config::$(echo $CONFIG | tr '\n' ' ')"
