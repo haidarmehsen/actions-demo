@@ -3,7 +3,9 @@ name: Read Config
 on:
   workflow_call:
     outputs:
-      config: ${{ jobs.set-environment-variables.outputs.config }}
+      config: 
+        description: "The configuration as a JSON string"
+        value: ${{ jobs.set-environment-variables.outputs.config }}
 
 jobs:
   set-environment-variables:
@@ -18,7 +20,7 @@ jobs:
         id: read-config
         run: |
           echo "Reading config file..."
-          config=$(cat ./.github/config.yml | sed 's/:/=/g' | sed "s/'//g" | tr '\n' ',' | sed 's/,$//')
+          config=$(cat ./.github/config.yml | yq eval -o=json)
           echo "config=$config" >> $GITHUB_OUTPUT
           echo "Config: $config"  # Debug output
         
