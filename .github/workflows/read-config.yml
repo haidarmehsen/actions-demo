@@ -10,6 +10,7 @@ jobs:
             - name: Read config
               id: read-config
               run: |
+                pwd
                 while IFS='=' read -r key value; do
                     echo "${key}=${value}" >> $GITHUB_ENV
                     echo "Setting $key=$value"
