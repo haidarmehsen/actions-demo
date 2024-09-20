@@ -2,28 +2,21 @@ name: Read Config
 
 on:
   workflow_call:
-    outputs:
-      config:
-        description: "All config variables"
-        value: ${{ jobs.read-config.outputs.config }}
 
 jobs:
   read-config:
     runs-on: ubuntu-latest
-    outputs:
-      config: ${{ steps.set-output.outputs.config }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.7
-        
-      - name: Read YAML and set output
-        id: set-output
+
+      - name: Read YAML and set environment variables
         run: |
-          echo "config<<EOF" >> $GITHUB_OUTPUT
-          yq e 'to_entries | map(.key + "=" + .value) | .[]' ./.github/config.yml >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        
+          while IFS='=' read -r key value; do
+            echo "${key}=${value}" >> $GITHUB_ENV
+          done < <(sed 's/: /=/g' ./.github/config.yml)
+
       - name: Debug Output
         run: |
-          echo "Config:"
-          echo "${{ steps.set-output.outputs.config }}"
+          echo "Environment variables set:"
+          env | grep -E "FLUTTER_VERSION|JAVA_VERSION|JAVA_DISTRIBUTION|myName"

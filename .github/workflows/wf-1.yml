@@ -14,24 +14,22 @@ jobs:
     name: First Job
     runs-on: ubuntu-latest
     needs: read-config
+
     steps:
-      - name: Set Config Variables
-        run: |
-          echo "${{ needs.read-config.outputs.config }}" >> $GITHUB_ENV
-      
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+
       - name: Say Hi
         run: echo "Hi, I am the first step in the first job of the first workflow."
       
       - name: Use Config Variables
         run: |
-          echo "Flutter version: ${{ env.FLUTTER_VERSION }}"
-          echo "Java version: ${{ env.JAVA_VERSION }}"
-          echo "Java distribution: ${{ env.JAVA_DISTRIBUTION }}"
-          echo "My name: ${{ env.myName }}"
-          echo "His name: ${{ env.hisName }}"
-          echo "Her name: ${{ env.herName }}"
+          echo "Flutter version: $FLUTTER_VERSION"
+          echo "Java version: $JAVA_VERSION"
+          echo "Java distribution: $JAVA_DISTRIBUTION"
+          echo "My name: $myName"
           
       - name: Show All Config Variables
         run: |
           echo "All config variables:"
-          env | grep -E "$(yq e 'keys | .[]' ./.github/config.yml | paste -sd '|' -)"
+          env | grep -E "FLUTTER_VERSION|JAVA_VERSION|JAVA_DISTRIBUTION|myName"
