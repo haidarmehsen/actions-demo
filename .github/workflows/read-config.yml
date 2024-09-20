@@ -3,15 +3,18 @@ name: Read Configuration
 on:
   workflow_call:
     outputs:
-        CONFIG:
-            description: "The configuration file as key-value pairs"
-            value: ${{ jobs.read-config.steps.set-config.outputs.CONFIG }}
+      CONFIG:
+        description: "The configuration file as key-value pairs"
+        value: ${{ jobs.read-config.outputs.CONFIG }}
 
 jobs:
   read-config:
     runs-on: ubuntu-latest
+    outputs:
+      CONFIG: ${{ steps.set-config.outputs.CONFIG }}
     steps:
       - name: Read Configuration and set outputs
         id: set-config
         run: |
-            echo "CONFIG=$(cat ./.github/config.yml)" >> $GITHUB_OUTPUT
+          CONFIG=$(cat ./.github/config.yml)
+          echo "CONFIG=${CONFIG}" >> $GITHUB_OUTPUT
