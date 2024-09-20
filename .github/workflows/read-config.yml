@@ -14,4 +14,4 @@ jobs:
             key=$(echo "$line" | cut -d ' ' -f 1)
             value=$(echo "$line" | cut -d ' ' -f 2-)
             echo "::set-output name=${key}::${value}"
-          done < ./github/actions/config.txt
+          done < ./.github/config.txt
